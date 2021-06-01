@@ -4,6 +4,7 @@
 const socketIO = require("socket.io");
 
 class SocketService {
+    
     constructor() {
         this.socket = null;
     }

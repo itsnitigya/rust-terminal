@@ -1,9 +1,8 @@
 // index.js
 
-const http = require("http");
-const SocketService = require("./SocketService");
-const Container = require('./Container');
-const fs = require('fs');
+import http from "http";
+//import SocketService from "./SocketService";
+import fs from 'fs';
 
 /* 
   Create Server from http module.

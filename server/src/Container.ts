@@ -1,8 +1,8 @@
-const Docker = require('dockerode');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
+import Docker from 'dockerode';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
-let exp = {};
+let exp : any = {};
 
 // Put the socket path in env 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
