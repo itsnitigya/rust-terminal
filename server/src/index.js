@@ -2,6 +2,8 @@
 
 const http = require("http");
 const SocketService = require("./SocketService");
+const Container = require('./Container');
+const fs = require('fs');
 
 /* 
   Create Server from http module.
@@ -10,14 +12,16 @@ const SocketService = require("./SocketService");
   const server = require("http").Server(app);
 */
 const server = http.createServer((req, res) => {
-  res.write("Terminal Server Running.");
-  res.end();
+    res.write("Terminal Server Running.");
+    res.end();
 });
 
 const port = 8080;
 
-server.listen(port, function () {
-  console.log("Server listening on : ", port);
-  const socketService = new SocketService();
-  socketService.attachServer(server);
+server.listen(port, function() {
+    console.log("Server listening on : ", port);
+    const socketService = new SocketService();
+    socketService.attachServer(server);
 });
+
+// Container.loadContainer();
