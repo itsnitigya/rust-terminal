@@ -1,8 +1,8 @@
 // index.js
 
-import http from "http";
-//import SocketService from "./SocketService";
-import fs from 'fs';
+const http =  require("http");
+const SocketService = require("./SocketService");
+const Container = require("./Container");
 
 /* 
   Create Server from http module.
@@ -23,4 +23,7 @@ server.listen(port, function() {
     socketService.attachServer(server);
 });
 
-// Container.loadContainer();
+//Container.runCommand("d1c5580a9c8198f0d30810ac1108a3807fbea3b566c3b2646ae7eb6e80933b0c", "echo hello")
+// Container.startNewRustContainer();
+Container.runRustContainer("d58b70b0892f6ad405bf0221b911ec65edc98719595a84eb6a702bf189aca542");
+//Container.startNewContainer();
