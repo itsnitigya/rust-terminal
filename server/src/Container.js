@@ -114,6 +114,43 @@ exp.runCommand = (id, cmd) => {
             });
         });
     });
+
+}
+
+exp.runCode = async (id, code) => {
+
+    const container = docker.getContainer(id);
+
+    let options = {
+        Cmd: ["bash", "-c", `rm testing.rs; echo "${code}" >> testing.rs`],
+        AttachStdout: true,
+        AttachStdin: true,
+        AttachStderr: true
+    };
+
+    let err, exec;
+
+    [err, exec] = await to(container.exec(options));
+
+    await exec.start(function(err, stream) {
+        if (err) return;
+
+        container.modem.demuxStream(stream, process.stdout, process.stderr);
+    });
+
+    options = {
+        Cmd: ["bash", "-c", "rustc testing.rs; ./testing"],
+        AttachStdout: true,
+        AttachStdin: true,
+        AttachStderr: true
+    };
+
+    [err, exec] = await to(container.exec(options));
+    await exec.start(function(err, stream) {
+        if (err) return;
+
+        container.modem.demuxStream(stream, stdout, stderr);
+    });
 }
 
 module.exports = exp;
