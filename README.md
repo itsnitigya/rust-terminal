@@ -1,4 +1,15 @@
-# rust-terminal
+# Rust Terminal
+
+Technologies to use:
+
+* React/Next.js for a basic frontend (recommended)
+* TypeScript for backend (mandatory)
+* WebSockets (mandatory)
+* Docker for containerization (recommended)
+* Xterm.js for terminal access (recommended)
+* Docker engine API (recommended)
+* Dockerode for interacting with docker engine API (recommended)
+
 
 <img width="830" alt="Screenshot 2021-06-01 at 11 54 44 PM" src="https://user-images.githubusercontent.com/40539705/120372393-c671e200-c334-11eb-85e8-9bafb1f04bdb.png">
 
