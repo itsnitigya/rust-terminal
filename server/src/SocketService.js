@@ -7,6 +7,9 @@ const {stdout, stderr} = require('./Stream');
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
 
+
+// only one class instance only one user can issue commands for now
+// for scaling using socket-cluster
 class SocketService {
     
     constructor() {
@@ -17,30 +20,23 @@ class SocketService {
         if (!server) {
             throw new Error("Server not found...");
         }
-
         const io = socketIO(server);
-        console.log("Created socket server. Waiting for client connection.");
-        // "connection" event happens when any client connects to this io instance.
 
+        console.log("Created socket server. Waiting for client connection.");
+  
         io.on("connection", (socket) => {
+            // Create a container service here and store the ip of the device
+            // Map the container id and ip so we can send commands to specific container
             console.log("Client connect to socket.", socket.id);
 
             this.socket = socket;
-         //   mainSocket = socket;
 
-            // Just logging when socket disconnects.
             this.socket.on("disconnect", () => {
                 console.log("Disconnected Socket: ", socket.id);
             });
 
-            // Create a new container service when client connects.
-
-            // Attach any event listeners which runs if any event is triggered from socket.io client
-            // For now, we are only adding "input" event, where client sends the strings you type on terminal UI.
             console.log("socket is listening")
             this.socket.on("input", (input) => {
-
-                console.log("from front end command", input);
 
                 // run commmand here 
                 // validate input 
@@ -58,7 +54,7 @@ class SocketService {
                 stderr.on('data', chunk => {
                     let lines = decoder.write(chunk);
                 
-                    this.socket.emit("output", lines.replace(/\n/g, " "));
+                    this.socket.emit("output-error", lines.replace(/\n/g, " "));
                 });
                 
             });
