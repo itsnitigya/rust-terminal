@@ -3,6 +3,9 @@
 // Manage Socket.IO server
 const socketIO = require("socket.io");
 const Container = require("./Container");
+const {stdout, stderr} = require('./Stream');
+const StringDecoder = require('string_decoder').StringDecoder;
+const decoder = new StringDecoder('utf8');
 
 class SocketService {
     
@@ -23,6 +26,7 @@ class SocketService {
             console.log("Client connect to socket.", socket.id);
 
             this.socket = socket;
+         //   mainSocket = socket;
 
             // Just logging when socket disconnects.
             this.socket.on("disconnect", () => {
@@ -33,10 +37,30 @@ class SocketService {
 
             // Attach any event listeners which runs if any event is triggered from socket.io client
             // For now, we are only adding "input" event, where client sends the strings you type on terminal UI.
+            console.log("socket is listening")
             this.socket.on("input", (input) => {
-                // Runs this event function socket receives "input" events from socket.io client
-                // Write the output to the container 
 
+                console.log("from front end command", input);
+
+                // run commmand here 
+                // validate input 
+                // hard coded container id for now 
+                Container.runCommand("d58b70b0892f6ad405bf0221b911ec65edc98719595a84eb6a702bf189aca542", input)
+
+                // wait for container run command
+                stdout.on('data', chunk => {
+                    let lines = decoder.write(chunk);
+                
+                    this.socket.emit("output", lines.replace(/\n/g, " "));
+                });
+
+
+                stderr.on('data', chunk => {
+                    let lines = decoder.write(chunk);
+                
+                    this.socket.emit("output", lines.replace(/\n/g, " "));
+                });
+                
             });
         });
     }
