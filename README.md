@@ -19,8 +19,8 @@
 * Creates and removes containers on-demand, i.e. if someone opens the same link in a new tab they get a new container and a new environment -> Containers are created on-demand and removed as soon as socket disconnects. But only one container works at a single time because of single socket connection. ( solution : socket cluster )
 
 
+<img width="811" alt="Screenshot 2021-06-04 at 4 09 46 AM" src="https://user-images.githubusercontent.com/40539705/120721062-bc91df80-c4ea-11eb-935d-988eda183859.png">
 
-<img width="830" alt="Screenshot 2021-06-01 at 11 54 44 PM" src="https://user-images.githubusercontent.com/40539705/120372393-c671e200-c334-11eb-85e8-9bafb1f04bdb.png">
 
 ### Future work : 
 2. Map the ip/hardware of the device to certain a container id. Disconnect socket if client is inactive and release the container. 
