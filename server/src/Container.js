@@ -1,6 +1,6 @@
 const Docker = require('dockerode');
 const to = require('./utils/to')
-const {stdout, stderr} = require('./Stream');
+const {stdout, stderr} = require('./stream');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
@@ -32,22 +32,29 @@ function runTerminal(container) {
     });
 }
 
-exp.startNewRustContainer = () => {
-    docker.createContainer({
-            Image: 'rust',
-            Tty: true,
-        },
-        function(err, container) {
-            if (err) {
-                console.log(err);
-                return;
-            }
+exp.startNewRustContainer = async () => {
+    let err;
 
-            // store container.id in redis cache 
-            container.start({}, function(err, data) {
-                runTerminal(container, "");
-            });
-        });
+    let container;
+    [err, container] = await to(docker.createContainer({
+        Image: 'rust',
+        Tty: true,
+    }));
+
+    let id = container.id;
+
+    container.start({}, function(err, data) {
+        runTerminal(container);
+    });
+
+    return id;
+}
+
+exp.killContainer = async (id) => {
+    const container = docker.getContainer(id);
+
+    await container.stop();
+    container.remove();
 }
 
 // cleaned the callbacks using promises (time crunch so did just one for function)
@@ -108,23 +115,6 @@ exp.runCommand = (id, cmd) => {
         });
     });
 }
-
-// not really required hopefully 
-exp.startNewContainer = () => {
-    docker.createContainer({
-        Image: 'ubuntu:16.04',
-        Tty: true,
-        Cmd: ['/bin/bash']
-    }, function(err, container) {
-        if (err) console.log(err);
-
-        // store container.id in redis cache 
-        container.start({}, function(err, data) {
-            runTerminal(container, "");
-        });
-    });
-}
-
 
 module.exports = exp;
 

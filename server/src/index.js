@@ -1,8 +1,8 @@
 // index.js
 
 const http =  require("http");
-const Container = require("./Container");
-const SocketService = require("./SocketService");
+const Container = require("../src/container");
+const SocketService = require("./services/socket");
 
 const server = http.createServer((req, res) => {
     res.write("Terminal Server Running.");
@@ -16,7 +16,3 @@ server.listen(port, function() {
     const socketService = new SocketService();
     socketService.attachServer(server);
 });
-
-// Container.startNewRustContainer();
-//Container.runRustContainer("d58b70b0892f6ad405bf0221b911ec65edc98719595a84eb6a702bf189aca542");
-//Container.startNewContainer();

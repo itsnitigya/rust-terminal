@@ -2,14 +2,14 @@
 
 // Manage Socket.IO server
 const socketIO = require("socket.io");
-const Container = require("./Container");
-const {stdout, stderr} = require('./Stream');
+const Container = require("../container");
+const {stdout, stderr} = require('../stream');
+
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
 
-
-// only one class instance only one user can issue commands for now
-// for scaling using socket-cluster
+// one class instance therefore only one user can issue commands for now
+// for scaling use socket-cluster
 class SocketService {
     
     constructor() {
@@ -18,42 +18,41 @@ class SocketService {
 
     attachServer(server) {
         if (!server) {
-            throw new Error("Server not found...");
+            throw new Error("server not found...");
         }
         const io = socketIO(server);
 
-        console.log("Created socket server. Waiting for client connection.");
+        console.log("created socket server. Waiting for client connection.");
   
-        io.on("connection", (socket) => {
-            // Create a container service here and store the ip of the device
-            // Map the container id and ip so we can send commands to specific container
-            console.log("Client connect to socket.", socket.id);
+        io.on("connection", async (socket) => {
+            console.log("client connect to socket ", socket.id);
+
+            const id = await Container.startNewRustContainer();
+            console.log("started new container ", id )
 
             this.socket = socket;
 
-            this.socket.on("disconnect", () => {
-                console.log("Disconnected Socket: ", socket.id);
+            this.socket.on("disconnect", async () => {
+                console.log("disconnected Socket ", socket.id);
+                await Container.killContainer(id);
+                console.log("deleted Container ", id);
             });
 
-            console.log("socket is listening")
             this.socket.on("input", (input) => {
 
-                // run commmand here 
                 // validate input 
-                // hard coded container id for now 
-                Container.runCommand("d58b70b0892f6ad405bf0221b911ec65edc98719595a84eb6a702bf189aca542", input)
+              //  Container.runCommand("f5affc6470296035e8c17a89f3883cc92d30e7282b6b6e4162a3951f660a1e77", input)
+                Container.runCommand(id, input)
 
                 // wait for container run command
                 stdout.on('data', chunk => {
                     let lines = decoder.write(chunk);
-                
                     this.socket.emit("output", lines.replace(/\n/g, " "));
                 });
 
 
                 stderr.on('data', chunk => {
                     let lines = decoder.write(chunk);
-                
                     this.socket.emit("output-error", lines.replace(/\n/g, " "));
                 });
                 
