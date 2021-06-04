@@ -2,9 +2,9 @@
 
 // Manage Socket.IO server
 const socketIO = require("socket.io");
-import Container from "../Container";
-import stdout from "../Stream";
-import stderr from "../Stream";
+import Container from "../container";
+import stdout from "../stream";
+import stderr from "../stream";
 
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('utf8');
