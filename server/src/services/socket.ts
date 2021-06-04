@@ -33,8 +33,8 @@ exp.attachServer = (server) => {
 
         socket.on("disconnect", async () => {
             console.log("disconnected Socket ", socket.id);
-            // await Container.killContainer(id);
-            // console.log("deleted Container ", id);
+            await Container.killContainer(id);
+            console.log("deleted Container ", id);
         });
 
         socket.on("input", (input) => {
