@@ -1,5 +1,7 @@
 # Rust Terminal
 
+Hosted on [codedamn.nitigyakapoor.in](https://codedamn.nitigyakapoor.in)
+
 ## Technologies to use:
 
 * React/Next.js for a basic frontend (recommended) -> React
