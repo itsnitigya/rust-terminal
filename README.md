@@ -2,7 +2,7 @@
 
 Hosted on Digital Ocean [codedamn.nitigyakapoor.in](https://codedamn.nitigyakapoor.in)
 
-## Local Dev:
+## Local Dev (Install):
 
 ``` bash
 docker pull rust # need this image for creating containers
