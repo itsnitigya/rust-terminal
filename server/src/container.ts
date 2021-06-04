@@ -1,10 +1,11 @@
 const Docker = require('dockerode');
-const to = require('./utils/to')
-const {stdout, stderr} = require('./stream');
+import to from "./utils/to";
+import stdout from "./stream";
+import stderr from "./stream";
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
-let exp = {};
+let exp : any = {};
 
 // run a terminal with tty enabled
 // this step keeps the container alive to issue commands
@@ -79,7 +80,6 @@ exp.runRustContainer = async (id) => {
     [err, stream] = await to(exec.start());
     if (err) return;
 
-    // stream goodness
     container.modem.demuxStream(stream, stdout, stderr);
 
     let data;
@@ -122,7 +122,7 @@ exp.runCode = async (id, code) => {
     const container = docker.getContainer(id);
 
     let options = {
-        Cmd: ["bash", "-c", `rm testing.rs; echo "${code}" >> testing.rs`],
+        Cmd: ["bash", "-c", `echo "${code}" > testing.rs`],
         AttachStdout: true,
         AttachStdin: true,
         AttachStderr: true
@@ -153,5 +153,5 @@ exp.runCode = async (id, code) => {
     });
 }
 
-module.exports = exp;
+export default exp;
 
