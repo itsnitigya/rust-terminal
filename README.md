@@ -2,6 +2,16 @@
 
 Hosted on Digital Ocean [codedamn.nitigyakapoor.in](https://codedamn.nitigyakapoor.in)
 
+## Local Dev:
+
+``` bash
+docker pull rust # need this image for creating containers
+git clone https://github.com/itsnitigya/rust-terminal
+cd rust-terminal/server/src
+npm install 
+npx ts-node index.ts # starts server on 8080
+```
+
 ## Technologies to use:
 
 * React/Next.js for a basic frontend (recommended) -> React
